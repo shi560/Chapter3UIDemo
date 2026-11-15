@@ -3,6 +3,8 @@
 把教材**第3章 UI设计**（3.1 组件 / 3.2 页面布局 / 3.3 事件，共 19 个小节）里给出的
 代码片段，逐段补成能在 DevEco Studio 里直接运行的完整页面。
 
+仓库地址：<https://github.com/shi560/Chapter3UIDemo>（Private）
+
 - 开发环境：DevEco Studio 26.0.0（SDK API 26）、hvigor 6.26.8
 - 工程类型：Stage 模型 / ArkTS
 - 兼容版本：compatibleSdkVersion 5.0.0(12)
@@ -58,13 +60,24 @@ Chapter3UIDemo/
 | 3.3.5 | `ScrollDemo.ets` | Scroll 控制器全部方法 |
 | 3.3.5 | `ScrollBarDemo.ets` | ScrollBar 自定义滚动条 |
 
-## 三、怎么跑
+## 三、怎么跑（已实测）
 
-见 `docs/运行与上传GitHub操作手册.md`，核心三步：
+见 `docs/运行与上传GitHub操作手册.md`，完整流程三步：
 
-1. DevEco Studio 打开本目录 → 右上角 **Sync Now**
-2. 登录华为账号 → `File > Project Structure > Signing Configs` 勾 **Automatically generate signature**
-3. 选模拟器/真机 → 点 ▶ Run
+1. **打开工程**：DevEco Studio →「文件 > 打开」选本目录 →「立即同步」，等构建窗口出现 `BUILD SUCCESSFUL`
+2. **启动模拟器**：「工具 > 设备管理器 > 本地模拟器」，选 `Mate 90 Pro`（HarmonyOS 7.0.0）点 ▶
+3. **运行**：顶部设备框选中该模拟器 → 点绿色 ▶「运行 'entry'」
+
+> **不需要签名**。本地模拟器接受未签名的 HAP，直接安装即可（真机才需要华为账号自动签名）。
+> 若 IDE 报签名相关错误，用命令行装：
+>
+> ```bash
+> HDC="C:/Program Files/Huawei/DevEco Studio/sdk/default/openharmony/toolchains/hdc.exe"
+> "$HDC" install -r entry/build/default/outputs/default/entry-default-unsigned.hap
+> "$HDC" shell aa start -a EntryAbility -b com.example.chapter3uidemo
+> ```
+
+运行后首页是「第3章 UI设计」目录页，点条目进入各节示例，返回键回目录。
 
 ## 四、说明
 

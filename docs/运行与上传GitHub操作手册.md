@@ -28,18 +28,26 @@
 
 ---
 
-## 第 2 步：登录华为账号 + 自动签名
+## 第 2 步：签名（可选 —— 用模拟器可以整步跳过）
 
-鸿蒙应用必须签名才能装进模拟器/手机。个人学习用**自动签名**最省事。用**你自己的**华为账号即可（跟老师的账号无关，也不需要借用）。
+> **实测结论：本地模拟器接受未签名的 HAP，直接安装即可。** 这一步只在「装到自己手机上」时才需要。
+> 若只跑模拟器，直接跳到第 3 步。
+>
+> 注意：在没启动模拟器/没连真机时勾「自动生成签名」，会报
+> 「缺少设备导致无法新建 profile 文件，请先通过 IP 或 USB 连接设备」——
+> 这不是故障，签名要求 Profile 绑定具体设备。**顺序必须是先连设备，再签名。**
 
-1. 点右上角头像图标 →「**登录**」（Sign In），用华为账号登录（没有就注册，免费；如提示实名认证按提示完成）。
-2. 菜单「**文件** > **项目结构...**」（File > Project Structure...）→ 左侧选「**项目** > **签名配置**」（Project > Signing Configs）。
-3. 勾选「**自动生成签名**」（Automatically generate signature），等 10 秒左右。
-4. 看到 Store file / Key alias / 两个密码框共 4 项**自动填满**，点「**确定**」。
+需要真机时这样做（用**你自己的**华为账号，跟老师的账号无关）：
+
+1. 先做好第 3 步，让模拟器/真机在线。
+2. 点右上角头像图标 →「**登录**」（Sign In），用华为账号登录（免费；如提示实名认证按提示完成）。
+3. 菜单「**文件** > **项目结构...**」→ 左侧「**项目** > **签名配置**」。
+4. 勾选「**自动生成签名**」，等 10 秒左右；4 个框若没填满，点红框里的「**重试**」。
+5. 点「**确定**」。
 
 **成功标志**：`build-profile.json5` 里 `signingConfigs` 从 `[]` 变成一段带证书路径的配置。
 
-> 这段配置含证书密码，**不能推到 GitHub**。第 6 步推送前请执行「推送前一键清理」。
+> 这段配置含证书密码，**不能推到 GitHub**。上传前改回 `[]`。
 
 ---
 
@@ -83,59 +91,50 @@
 
 ## 第 6 步：上传到 GitHub
 
-### 推送前一键清理（必做）
+> **重要：本机 DevEco Studio 26 没有自带 GitHub 插件。**
+> 插件目录里只有 `Git4Idea`、`vcs-git`，没有 `org.jetbrains.plugins.github`，因此
+> 设置里看不到「版本控制 > GitHub」，菜单里也没有「在 GitHub 上共享项目」。
+> 想用图形界面得另外装 GitHub 插件；本工程改用「网页建仓库 + 命令行推送」，**已实测走通**。
 
-签名配置里带着证书密码，推送前把它清空：
+### 6.1 网页上建空仓库（只做一次）
 
-```bash
-cd "C:/Users/Justing/WorkBuddy/2026-11-15-12-55-37/Chapter3UIDemo"
-python - <<'PY'
-import re
-p = 'build-profile.json5'
-s = open(p, encoding='utf-8').read()
-s = re.sub(r'"signingConfigs"\s*:\s*\[.*?\n  \]', '"signingConfigs": []', s, flags=re.S)
-open(p, 'w', encoding='utf-8').write(s)
-print('signingConfigs 已清空')
-PY
-git add -A && git commit -m "推送前清空本机签名配置"
-```
+1. 浏览器打开 <https://github.com/new>
+2. **Repository name** 填 `Chapter3UIDemo`
+3. 可见度选 **Private**（私有）
+4. 三个勾（Add README / Add .gitignore / Choose a license）**一个都不要勾**
+5. 点绿色 **Create repository**
 
-清空后本地仍能编译，只是不能再安装到设备（需要时重做第 2 步勾一次自动签名即可）。
+### 6.2 本工程已配好的状态
 
-### 方式 A：图形界面（推荐）
+- 远程地址：`https://github.com/shi560/Chapter3UIDemo.git`（`git remote -v` 可验证）
+- 分支：`main`，已推送，上游 `origin/main`
+- 仓库内容：70 个文件（23 个页面 + 资源 + 2 份文档），不含 `build/`、`.hvigor/`、`.idea/`、证书
 
-1. 菜单「**文件** > **设置**」（File > Settings）→ 左侧「**版本控制** > **GitHub**」（Version Control > GitHub）→ 点 **+** →「**使用令牌登录**」（Log In with Token）。
-   - 令牌生成：浏览器打开 https://github.com/settings/tokens → Generate new token (classic) → 勾 `repo` → 生成后复制粘贴进来。
-2. 回到主界面，菜单「**Git** > **GitHub** > **在 GitHub 上共享项目**」（Git > GitHub > Share Project on GitHub）。
-3. 填写：
-   - 仓库名（Repository name）：`Chapter3UIDemo`
-   - 描述：`HarmonyOS NEXT 教材第3章 UI设计 示例代码补全版`
-   - 建议勾选「**私有**」（Private）
-4. 点「**共享**」（Share），等待右下角提示 `Successfully shared project on GitHub`。
+### 6.3 以后有改动怎么推
 
-> 菜单里没有「在 GitHub 上共享项目」：说明当前工程没被识别为 git 仓库，确认打开的是 `Chapter3UIDemo` 目录（里面有隐藏文件夹 `.git`）。
+**方式一（最省事）**：双击工作区根目录下的 `推送GitHub.bat`。
+弹出登录框时选 **Sign in with your browser**，浏览器里点绿色授权即可，窗口显示 `RESULT CODE: 0` 即成功。
 
-### 方式 B：命令行
-
-1. 先在 GitHub 网页 **New repository** 建一个空仓库（**不要**勾 Add README / .gitignore），名字 `Chapter3UIDemo`。
-2. 本机 Git Bash 执行：
+**方式二（命令行）**：
 
 ```bash
 cd "C:/Users/Justing/WorkBuddy/2026-11-15-12-55-37/Chapter3UIDemo"
-git remote add origin https://github.com/你的用户名/Chapter3UIDemo.git
-git push -u origin main
+git add -A
+git commit -m "说明这次改了什么"
+git push
 ```
 
-3. 弹窗要密码时，填 **Personal Access Token**（不是 GitHub 登录密码）。
+### 6.4 推送前检查
 
----
+`build-profile.json5` 里的 `signingConfigs` 应保持 `[]`。如果做过自动签名，先改回 `[]` 再提交，
+否则证书密码会被推到仓库里。
 
 ## 注意事项
 
 1. **不要提交签名材料**：`.p12` / `.cer` / `.p7b` 和证书密码都属个人私钥，不要提交、不要发给别人。
 2. `.gitignore` 已排除 `build/`、`.hvigor/`、`oh_modules/`、`.idea/`、`local.properties`、`.preview/`，仓库里只有源码，约 100KB。
-3. 老师拿到你的仓库后，clone 下来用他自己的华为账号做一遍第 1、2 步就能运行——签名不需要共用。
-4. 以后改完代码上传三步：`git add -A` → `git commit -m "说明"` → `git push`；或在 DevEco 用「**Git** > **提交**」和「**Git** > **推送**」。
+3. 老师拿到你的仓库后，clone 下来用 DevEco 打开 → 同步 → 建模拟器 → 运行即可；**只在装真机时才需要签名，不用共用任何账号**。
+4. 以后改完代码上传三步：`git add -A` → `git commit -m "说明"` → `git push`；或双击工作区根目录的 `推送GitHub.bat`。
 
 ---
 
@@ -145,7 +144,7 @@ git push -u origin main
 |---|---|---|
 | 打开工程提示「找不到指定的路径」 | 路径里漏了 `2026-11-15-12-55-37` 这一层 | 用鼠标逐层点开，别手打 |
 | 同步报 `Cannot find SDK` | SDK 路径未配置 | 「文件 > 项目结构 > SDK」选 API 26 |
-| 运行报 `Install failed, signature verify failed` | 没做自动签名 | 回到第 2 步 |
+| 运行报 `Install failed, signature verify failed` | 用了真机但没签名 | 真机回到第 2 步；**模拟器不该出现此错**，出现就用 `hdc install` 手动装（见 README「怎么跑」） |
 | 运行按钮灰着 / 提示没有设备 | 模拟器没启动或真机没开 USB 调试 | 「工具 > 设备管理器」启动模拟器 |
 | 3.3.2 点跳转没反应 | 用了预览器，不支持系统路由表 | 改用模拟器或真机 |
 | 3.1.4 网络图片不显示 | 模拟器无网络 | 正常现象，`.alt()` 显示占位图 |
