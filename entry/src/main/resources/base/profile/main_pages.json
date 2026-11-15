@@ -1,0 +1,26 @@
+{
+  "src": [
+    "pages/Index",
+    "pages/TextDemo",
+    "pages/ButtonDemo",
+    "pages/PageOne",
+    "pages/ImageDemo",
+    "pages/InputDemo",
+    "pages/RadioDemo",
+    "pages/SliderDemo",
+    "pages/LoginDemo",
+    "pages/StackDemo",
+    "pages/FlexDemo",
+    "pages/RelativeDemo",
+    "pages/GridDemo",
+    "pages/ListDemo",
+    "pages/SwiperDemo",
+    "pages/TouchDemo",
+    "pages/DragDemo",
+    "pages/NavDemo",
+    "pages/DialogDemo",
+    "pages/GestureDemo",
+    "pages/ScrollDemo",
+    "pages/ScrollBarDemo"
+  ]
+}

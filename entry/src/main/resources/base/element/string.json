@@ -1,0 +1,24 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "第三章 UI设计 示例代码"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "第三章 UI设计 示例代码"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "第三章 UI设计"
+    },
+    {
+      "name": "peopleOne",
+      "value": "小明"
+    },
+    {
+      "name": "peopleTwo",
+      "value": "小红"
+    }
+  ]
+}

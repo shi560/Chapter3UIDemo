@@ -1,0 +1,12 @@
+{
+  "routerMap": [
+    {
+      "name": "NavPageOne",
+      "pageSourceFile": "src/main/ets/pages/NavPageOne.ets",
+      "buildFunction": "NavPageOneBuilder",
+      "data": {
+        "description": "this is NavPageOne"
+      }
+    }
+  ]
+}
